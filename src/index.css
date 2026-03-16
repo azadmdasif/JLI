@@ -1,17 +1,21 @@
 @import "tailwindcss";
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=EB+Garamond:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,500;1,600;1,700;1,800&display=swap');
 
 @theme {
   --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
-  --font-serif: "Cormorant Garamond", serif;
-  --font-display: "Playfair Display", serif;
+  --font-serif: "EB Garamond", serif;
+  --font-display: "EB Garamond", serif;
   
-  --color-jli-bg: #fdfbf7;
-  --color-jli-card: #f5f2ed;
-  --color-jli-accent: #1a3a32;
-  --color-jli-secondary: #e5e1da;
-  --color-jli-text: #1a1a1a;
-  --color-jli-muted: #6b6b6b;
+  --color-jli-bg: #ffffff;
+  --color-jli-card: #f0fdf4;
+  --color-jli-accent: #22c55e;
+  --color-jli-accent-light: #4ade80;
+  --color-jli-accent-dark: #15803d;
+  --color-jli-secondary: #f0f9ff;
+  --color-jli-tertiary: #fffbeb;
+  --color-jli-quaternary: #fef2f2;
+  --color-jli-text: #0f172a;
+  --color-jli-muted: #64748b;
 
   --animate-gradient: gradient 8s ease infinite;
 
@@ -45,10 +49,6 @@
     @apply bg-black/5 backdrop-blur-xl border border-black/10;
   }
   
-  .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-black via-neutral-500 to-black;
-  }
-
   .glow-button {
     @apply relative overflow-hidden transition-all duration-700;
     box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
@@ -93,7 +93,11 @@
   }
 
   .text-gradient {
-    @apply bg-clip-text text-transparent bg-gradient-to-r from-jli-accent via-emerald-900 to-jli-accent bg-[length:200%_auto] animate-gradient;
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-jli-accent-light via-jli-accent-dark to-jli-accent-light bg-[length:200%_auto] animate-gradient;
+  }
+
+  .bg-jli-gradient {
+    background: linear-gradient(135deg, var(--color-jli-accent-light), var(--color-jli-accent-dark));
   }
 }
 

@@ -167,16 +167,40 @@ const Reveal = ({ children, width = "w-full", delay = 0 }: { children: ReactNode
     <motion.div
       initial="initial"
       whileInView="animate"
-      viewport={{ once: true, amount: 0.2 }}
+      viewport={{ once: true, amount: 0.1 }}
       variants={{
-        initial: { opacity: 0, y: 30 },
-        animate: { opacity: 1, y: 0 }
+        initial: { opacity: 0, y: 40, scale: 0.98 },
+        animate: { opacity: 1, y: 0, scale: 1 }
       }}
-      transition={{ duration: 0.8, delay, ease: [0.22, 1, 0.36, 1] }}
+      transition={{ duration: 1, delay, ease: [0.22, 1, 0.36, 1] }}
       className={width}
     >
       {children}
     </motion.div>
+  );
+};
+
+const Section = ({ 
+  children, 
+  id, 
+  className = "", 
+  bgColor = "#ffffff",
+  onInView 
+}: { 
+  children: ReactNode, 
+  id?: string, 
+  className?: string, 
+  bgColor?: string,
+  onInView?: (color: string) => void 
+}) => {
+  return (
+    <motion.section
+      id={id}
+      onViewportEnter={() => onInView?.(bgColor)}
+      className={`relative py-24 md:py-40 overflow-hidden transition-colors duration-1000 ${className}`}
+    >
+      {children}
+    </motion.section>
   );
 };
 
@@ -193,7 +217,7 @@ const Navbar = () => {
   const navLinks = [
     { name: 'Vision', href: '#vision' },
     { name: 'Curriculum', href: '#curriculum' },
-    { name: 'JYST 2026', href: '#jyst' },
+    { name: 'Admissions', href: '#jyst' },
     { name: 'Faculty', href: '#faculty' },
     { name: 'FAQ', href: '#faq' },
   ];
@@ -238,7 +262,7 @@ const Navbar = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.8 }}
             href="#jyst" 
-            className="glow-button bg-jli-accent text-white px-8 py-3 rounded-sm font-bold text-[9px] uppercase tracking-[0.3em] hover:bg-emerald-700 transition-all"
+            className="glow-button bg-jli-gradient text-white px-8 py-3 rounded-sm font-bold text-[9px] uppercase tracking-[0.3em] hover:brightness-110 transition-all"
           >
             Apply Now
           </motion.a>
@@ -282,7 +306,7 @@ const Navbar = () => {
   );
 };
 
-const Hero = () => {
+const Hero = ({ onInView }: { onInView: (color: string) => void }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const { scrollYProgress } = useScroll({
     target: containerRef,
@@ -295,7 +319,11 @@ const Hero = () => {
   const textY = useTransform(scrollYProgress, [0, 1], [0, 150]);
 
   return (
-    <section ref={containerRef} className="relative h-screen flex items-center justify-center overflow-hidden">
+    <motion.section 
+      ref={containerRef} 
+      onViewportEnter={() => onInView("#ffffff")}
+      className="relative min-h-screen flex items-center justify-center overflow-hidden py-32 md:py-0"
+    >
       <LensFlare />
       {/* Background Image with Parallax */}
       <motion.div style={{ y, scale }} className="absolute inset-0 z-0">
@@ -316,45 +344,59 @@ const Hero = () => {
           initial="initial"
           animate="animate"
           style={{ y: textY }}
-          className="space-y-12"
+          className="space-y-8 md:space-y-12"
         >
-          <div className="space-y-4">
+          {/* Header Stack */}
+          <div className="flex flex-col items-center space-y-6 mb-8">
+            <motion.div variants={fadeInUp} className="flex flex-col items-center space-y-4">
+              <img src="/logo.png" alt="JiSRA Logo" className="h-16 md:h-20 w-auto" referrerPolicy="no-referrer" />
+              <div className="flex flex-col items-center">
+                <span className="text-jli-text font-serif font-bold text-2xl md:text-3xl tracking-tight leading-none">JiSRA</span>
+                <span className="text-jli-muted text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold">Leadership Institute</span>
+              </div>
+            </motion.div>
+
             <motion.div 
               variants={fadeInUp}
-              className="inline-flex items-center space-x-2 px-6 py-2 rounded-full glass text-[10px] uppercase tracking-[0.4em] font-bold text-jli-accent mb-4"
+              className="flex flex-col items-center gap-3"
             >
-              <Sparkles size={12} />
-              <span>Inaugural Cohort 2026</span>
+              <div className="inline-flex items-center space-x-2 px-6 py-2 rounded-full glass text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-bold text-jli-accent">
+                <Sparkles size={12} />
+                <span>Inaugural Cohort 2026</span>
+              </div>
+              <div className="inline-flex items-center space-x-2 px-6 py-2 rounded-full bg-jli-accent/10 border border-jli-accent/20 text-[9px] md:text-[10px] uppercase tracking-[0.4em] font-bold text-jli-accent">
+                <span>Classes 5 & 6 Only (CBSE)</span>
+              </div>
             </motion.div>
-            
-            <motion.h1 
-              variants={fadeInUp}
-              className="text-5xl md:text-8xl font-display font-bold text-jli-text leading-tight tracking-tight"
-            >
-              Is your child <span className="text-gradient italic">ready to lead?</span>
-            </motion.h1>
           </div>
           
           <div className="space-y-6">
+            <motion.h1 
+              variants={fadeInUp}
+              className="text-4xl sm:text-5xl md:text-8xl font-display font-bold text-jli-text leading-tight tracking-tight"
+            >
+              Is your child <span className="text-gradient italic">ready to lead?</span>
+            </motion.h1>
+            
             <motion.p 
               variants={fadeInUp}
-              className="text-lg md:text-2xl text-jli-text max-w-4xl mx-auto font-light leading-relaxed"
+              className="text-base md:text-2xl text-jli-text max-w-4xl mx-auto font-light leading-relaxed px-4"
             >
-              JiSRA Leadership Institute is selecting 20 exceptional Muslim students from Classes 5 and 6 for its inaugural cohort — future leaders, innovators, and entrepreneurs.
+              JiSRA Leadership Institute is selecting 20 exceptional Muslim students from <span className="text-jli-accent font-bold underline decoration-jli-accent/30 underline-offset-8">Classes 5 and 6</span> for its inaugural cohort — exclusively for the <span className="font-bold">CBSE curriculum</span>.
             </motion.p>
           </div>
           
           <motion.div 
             variants={fadeInUp}
-            className="flex flex-col sm:flex-row justify-center gap-8 pt-8"
+            className="flex flex-col sm:flex-row justify-center items-center gap-4 md:gap-8 pt-4 md:pt-8"
           >
             <Magnetic>
-              <a href="#jyst" className="glow-button bg-jli-accent text-white px-12 py-6 rounded-sm font-bold text-[10px] uppercase tracking-[0.3em] hover:bg-emerald-700 shadow-2xl transition-all">
-                Apply for the JiSRA Young Scholars Test (JYST)
+              <a href="#jyst" className="glow-button bg-jli-gradient text-white px-10 md:px-12 py-5 md:py-6 rounded-sm font-bold text-[9px] md:text-[10px] uppercase tracking-[0.3em] hover:brightness-110 shadow-2xl transition-all w-full sm:w-auto text-center">
+                Apply for selection
               </a>
             </Magnetic>
             <Magnetic>
-              <a href="#program" className="glass text-jli-text px-12 py-6 rounded-sm font-bold text-[10px] uppercase tracking-[0.3em] hover:bg-black/5 transition-all">
+              <a href="#program" className="glass text-jli-text px-10 md:px-12 py-5 md:py-6 rounded-sm font-bold text-[9px] md:text-[10px] uppercase tracking-[0.3em] hover:bg-black/5 transition-all w-full sm:w-auto text-center">
                 Explore the program
               </a>
             </Magnetic>
@@ -362,21 +404,21 @@ const Hero = () => {
         </motion.div>
       </div>
 
-      {/* Scroll Indicator */}
+      {/* Scroll Indicator - Hidden on small screens to avoid overlap */}
       <motion.div 
         style={{ opacity }}
         animate={{ y: [0, 10, 0] }}
         transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-        className="absolute bottom-12 left-1/2 -translate-x-1/2 flex flex-col items-center space-y-4"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 hidden md:flex flex-col items-center space-y-4"
       >
         <span className="text-[9px] uppercase tracking-[0.5em] text-jli-muted font-bold">Explore</span>
         <div className="w-[1px] h-16 bg-gradient-to-b from-jli-accent to-transparent" />
       </motion.div>
-    </section>
+    </motion.section>
   );
 };
 
-const Mission = () => {
+const Mission = ({ onInView }: { onInView: (color: string) => void }) => {
   const imageRef = useRef(null);
   const { scrollYProgress } = useScroll({
     target: imageRef,
@@ -385,10 +427,10 @@ const Mission = () => {
   const imageY = useTransform(scrollYProgress, [0, 1], [-50, 50]);
 
   return (
-    <section id="vision" className="relative py-40 bg-jli-card overflow-hidden">
+    <Section id="vision" bgColor="#f0fdf4" onInView={onInView}>
       <div className="absolute inset-0 islamic-pattern opacity-[0.03]" />
       <div className="max-w-7xl mx-auto px-6 lg:px-12 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-32 items-center">
           <motion.div
             initial="initial"
             whileInView="animate"
@@ -408,12 +450,12 @@ const Mission = () => {
             </motion.p>
             <motion.div variants={fadeInUp} className="grid grid-cols-1 sm:grid-cols-2 gap-8 pt-6">
               <div className="space-y-4">
-                <div className="text-jli-accent font-serif text-3xl font-bold italic">20</div>
-                <p className="text-[10px] uppercase tracking-widest text-jli-muted font-bold">Elite Scholars per Class</p>
+                <div className="text-jli-accent font-serif text-3xl font-bold italic">Class 5 & 6</div>
+                <p className="text-[10px] uppercase tracking-widest text-jli-muted font-bold">Exclusively for CBSE</p>
               </div>
               <div className="space-y-4">
-                <div className="text-jli-accent font-serif text-3xl font-bold italic">100%</div>
-                <p className="text-[10px] uppercase tracking-widest text-jli-muted font-bold">Residential Immersion</p>
+                <div className="text-jli-accent font-serif text-3xl font-bold italic">20</div>
+                <p className="text-[10px] uppercase tracking-widest text-jli-muted font-bold">Elite Scholars per Class</p>
               </div>
             </motion.div>
           </motion.div>
@@ -440,7 +482,7 @@ const Mission = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: 0.5 }}
-              className="absolute -bottom-12 -left-12 glass p-10 rounded-sm max-w-xs border-jli-accent/20 shadow-2xl"
+              className="relative md:absolute mt-8 md:mt-0 md:-bottom-12 md:-left-12 glass p-6 md:p-10 rounded-sm max-w-xs border-jli-accent/20 shadow-2xl z-10"
             >
               <Compass className="text-jli-accent mb-4" size={32} />
               <p className="text-xs text-jli-muted italic leading-relaxed">
@@ -450,11 +492,11 @@ const Mission = () => {
           </motion.div>
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const Pedagogy = () => {
+const Pedagogy = ({ onInView }: { onInView: (color: string) => void }) => {
   const pillars = [
     {
       title: "Self",
@@ -484,10 +526,10 @@ const Pedagogy = () => {
   ];
 
   return (
-    <section className="py-40 bg-jli-bg relative overflow-hidden">
+    <Section bgColor="#fef2f2" onInView={onInView}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <Reveal>
-          <div className="text-center mb-32 space-y-6">
+          <div className="text-center mb-16 md:mb-32 space-y-6">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">The 5S Framework</span>
             <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">
               The <span className="text-gradient italic">Five Pillars</span> of JiSRA
@@ -509,7 +551,7 @@ const Pedagogy = () => {
             <TiltCard key={idx} className="h-full">
               <motion.div 
                 variants={fadeInUp}
-                className="group relative p-8 rounded-sm bg-jli-card border border-black/5 hover:border-jli-accent transition-all duration-700 h-full"
+                className="group relative p-8 rounded-sm bg-jli-secondary border border-black/5 hover:border-jli-accent transition-all duration-700 h-full"
               >
                 <div className="relative z-10">
                   <div className="w-12 h-12 rounded-full glass flex items-center justify-center text-jli-accent mb-8 group-hover:scale-110 group-hover:bg-jli-accent group-hover:text-white transition-all duration-500">
@@ -523,11 +565,11 @@ const Pedagogy = () => {
           ))}
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const AgentsOfVision = () => {
+const AgentsOfVision = ({ onInView }: { onInView: (color: string) => void }) => {
   const agents = [
     {
       title: "The Teacher",
@@ -553,10 +595,10 @@ const AgentsOfVision = () => {
   ];
 
   return (
-    <section className="py-40 bg-white relative overflow-hidden">
+    <Section bgColor="#ffffff" onInView={onInView}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <Reveal>
-          <div className="text-center mb-32 space-y-6">
+          <div className="text-center mb-16 md:mb-32 space-y-6">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">Implementation</span>
             <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">
               The <span className="text-gradient italic">Agents</span> of Our Vision
@@ -597,11 +639,11 @@ const AgentsOfVision = () => {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const Curriculum = () => {
+const Curriculum = ({ onInView }: { onInView: (color: string) => void }) => {
   const pillars = [
     {
       title: "Academic Rigor",
@@ -626,10 +668,10 @@ const Curriculum = () => {
   ];
 
   return (
-    <section className="py-40 bg-jli-bg relative">
+    <Section bgColor="#f0f9ff" onInView={onInView}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <Reveal>
-          <div className="text-center mb-32 space-y-6">
+          <div className="text-center mb-16 md:mb-32 space-y-6">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">The Curriculum</span>
             <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">
               What Students <span className="text-gradient italic">Will Learn</span>
@@ -674,17 +716,17 @@ const Curriculum = () => {
           className="mt-32 text-center"
         >
           <Magnetic>
-            <a href="#jyst" className="glow-button bg-jli-accent text-white px-12 py-6 rounded-sm font-bold text-[10px] uppercase tracking-[0.3em] hover:bg-emerald-700 shadow-2xl transition-all">
+            <a href="#jyst" className="glow-button bg-jli-gradient text-white px-12 py-6 rounded-sm font-bold text-[10px] uppercase tracking-[0.3em] hover:brightness-110 shadow-2xl transition-all">
               Apply for the JiSRA Young Scholars Test (JYST)
             </a>
           </Magnetic>
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const TheJiSRAWay = () => {
+const TheJiSRAWay = ({ onInView }: { onInView: (color: string) => void }) => {
   const sections = [
     {
       title: "Academic Rigor",
@@ -697,7 +739,7 @@ const TheJiSRAWay = () => {
         "Character Building: Science experiments that foster patience and discipline (Self)."
       ],
       icon: <GraduationCap size={24} />,
-      color: "bg-emerald-50"
+      color: "bg-jli-card"
     },
     {
       title: "Islamic Learning",
@@ -706,11 +748,10 @@ const TheJiSRAWay = () => {
       points: [
         "Quran & Hifz: Phased journey from Tajweed and 99 Names to specialized Hifz.",
         "Islamic Studies: Comprehensive curriculum covering Tafsir, Akhlaqiyat, and History.",
-        "Arabic Language: Practical fluency in both Quranic and contemporary Arabic.",
-        "Relevant Faith: Connecting Zakat to ethics and Sahabas to leadership."
+        "Building Character: Connecting Zakat to ethics and Sahabas to leadership."
       ],
       icon: <Book size={24} />,
-      color: "bg-blue-50"
+      color: "bg-jli-secondary"
     },
     {
       title: "Modern Skills",
@@ -719,19 +760,18 @@ const TheJiSRAWay = () => {
       points: [
         "Tech Lab: Weekly classes in Coding, AI, Robotics, and Ethical Automation.",
         "Entrepreneurship: BFK program from idea generation to capstone ventures.",
-        "Communication: Public speaking, debate, and effective writing.",
-        "Holistic Growth: Financial literacy, emotional intelligence, and mental health."
+        "Communication: Public speaking, debate, and effective writing."
       ],
       icon: <Cpu size={24} />,
-      color: "bg-amber-50"
+      color: "bg-jli-tertiary"
     }
   ];
 
   return (
-    <section id="curriculum" className="py-40 bg-white relative overflow-hidden">
+    <Section id="curriculum" bgColor="#ffffff" onInView={onInView}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <Reveal>
-          <div className="text-center mb-32 space-y-6">
+          <div className="text-center mb-16 md:mb-32 space-y-6">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">Integrated Approach</span>
             <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">
               The <span className="text-gradient italic">JiSRA Way</span>
@@ -776,122 +816,94 @@ const TheJiSRAWay = () => {
           ))}
         </div>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const Admissions = () => {
-  const imageRef = useRef(null);
-  const { scrollYProgress } = useScroll({
-    target: imageRef,
-    offset: ["start end", "end start"]
-  });
-  const imageY = useTransform(scrollYProgress, [0, 1], [-60, 60]);
+const Admissions = ({ onInView }: { onInView: (color: string) => void }) => {
+  const dates = [
+    { date: "28 March 2026", status: "Most seats available", highlight: true },
+    { date: "05 April 2026", status: "Limited seats remaining", highlight: false },
+    { date: "12 April 2026", status: "Final assessment date", highlight: false }
+  ];
 
   return (
-    <section id="jyst" className="py-40 bg-jli-card relative overflow-hidden">
+    <Section id="jyst" bgColor="#f0fdf4" onInView={onInView}>
       <div className="absolute inset-0 islamic-pattern opacity-[0.02]" />
-      <div className="max-w-7xl mx-auto px-6 lg:px-12">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-32 items-center">
-          <motion.div 
-            variants={staggerContainer}
-            initial="initial"
-            whileInView="animate"
-            viewport={{ once: true }}
-            className="space-y-12"
-          >
+      <div className="max-w-5xl mx-auto px-6 lg:px-12 relative z-10">
+        <Reveal>
+          <div className="text-center space-y-8 mb-12 md:mb-20">
             <div className="space-y-4">
-              <motion.span variants={fadeInUp} className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">Admissions Process</motion.span>
-              <motion.h2 variants={fadeInUp} className="text-4xl md:text-6xl font-display font-bold text-jli-text">JiSRA Young <br /><span className="text-gradient italic">Scholars Test</span></motion.h2>
+              <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">Admissions Process</span>
+              <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">
+                JiSRA Young Scholars <br /><span className="text-gradient italic">Test (JYST) 2026</span>
+                <div className="text-xl md:text-2xl mt-4 text-jli-accent font-serif italic">For Classes 5 & 6 (CBSE)</div>
+              </h2>
+              <p className="text-jli-muted text-[10px] uppercase tracking-[0.3em] font-bold">The selection process for admission to JiSRA Leadership Institute</p>
             </div>
             
-            <motion.p variants={fadeInUp} className="text-jli-muted text-lg leading-relaxed font-light">
-              We are looking for the brightest minds of the Ummah. Our search is focused on identifying <span className="text-jli-accent font-bold">20 exceptional students each from classes 5 and 6</span> for our immersive residential fellowship.
-            </motion.p>
+            <p className="text-jli-muted text-lg md:text-xl leading-relaxed font-light max-w-3xl mx-auto">
+              The JiSRA Young Scholars Test identifies exceptional Muslim students with curiosity, character, and leadership potential. Through this assessment, we select <span className="text-jli-accent font-bold underline decoration-jli-accent/30 underline-offset-8">20 students each from Classes 5 and 6</span> exclusively for our <span className="font-bold">CBSE-based</span> residential fellowship.
+            </p>
+          </div>
+        </Reveal>
 
-            <div className="space-y-8">
-              {[
-                { title: "Intellectual Firasah", desc: "Identifying deep-seated curiosity and analytical potential.", icon: <Target size={20} /> },
-                { title: "Ethical Ambition", desc: "A moral compass rooted in Islamic values and universal justice.", icon: <ShieldCheck size={20} /> },
-                { title: "Future Readiness", desc: "Potential for mastery in AI, logic, and global leadership.", icon: <Lightbulb size={20} /> }
-              ].map((item, idx) => (
-                <motion.div key={idx} variants={fadeInUp} className="flex items-start space-x-6 group">
-                  <div className="w-10 h-10 rounded-full glass flex items-center justify-center text-jli-accent flex-shrink-0 group-hover:bg-jli-accent group-hover:text-white transition-all duration-500">
-                    {item.icon}
-                  </div>
-                  <div>
-                    <h3 className="text-jli-text font-display font-bold text-lg mb-1">{item.title}</h3>
-                    <p className="text-xs text-jli-muted leading-relaxed font-light">{item.desc}</p>
-                  </div>
-                </motion.div>
-              ))}
-            </div>
-
-            <motion.div variants={fadeInUp} className="pt-8">
-              <Magnetic>
-                <a href="#" className="glow-button inline-flex items-center bg-jli-accent text-white px-12 py-6 rounded-sm font-bold text-[10px] uppercase tracking-[0.4em] hover:bg-emerald-700 transition-all">
-                  Register for JYST <ArrowRight className="ml-3" size={14} />
-                </a>
-              </Magnetic>
-            </motion.div>
-          </motion.div>
-
-          <motion.div 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
-            transition={{ duration: 1 }}
-            className="relative"
-          >
-            <div ref={imageRef} className="aspect-[3/4] rounded-sm overflow-hidden border border-black/5 relative group">
-              <motion.img 
-                style={{ y: imageY }}
-                src="https://images.unsplash.com/photo-1503676260728-1c00da094a0b?auto=format&fit=crop&q=80&w=1000" 
-                alt="Scholarly Environment" 
-                className="w-full h-[120%] object-cover grayscale opacity-40 group-hover:opacity-60 transition-all duration-1000 absolute top-[-10%]"
-                referrerPolicy="no-referrer"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-white via-transparent to-transparent" />
-            </div>
+        <motion.div 
+          variants={staggerContainer}
+          initial="initial"
+          whileInView="animate"
+          viewport={{ once: true }}
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 mb-16"
+        >
+          {dates.map((item, idx) => (
             <motion.div 
-              initial={{ opacity: 0, x: 20 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.6 }}
-              className="absolute -bottom-16 -right-16 glass p-12 rounded-sm max-w-sm border-black/10 shadow-2xl"
+              key={idx}
+              variants={fadeInUp}
+              className={`p-10 rounded-sm border transition-all duration-500 text-center flex flex-col justify-center ${
+                item.highlight 
+                ? "bg-white border-jli-accent shadow-xl scale-105 z-10" 
+                : "bg-white/50 border-black/5 hover:bg-white hover:border-black/10"
+              }`}
             >
-              <Calendar className="text-jli-accent mb-6" size={32} />
-              <h3 className="text-2xl font-display font-bold text-jli-text mb-4">Assessment Dates</h3>
-              <div className="space-y-4">
-                <div className="flex justify-between items-center border-b border-black/5 pb-4">
-                  <span className="text-xs text-jli-muted">28 March 2026</span>
-                  <span className="text-[8px] text-emerald-600 font-bold uppercase tracking-widest">Open</span>
+              <Calendar className={`mx-auto mb-6 ${item.highlight ? "text-jli-accent" : "text-jli-muted"}`} size={32} />
+              <h3 className="text-2xl font-display font-bold text-jli-text mb-2">{item.date}</h3>
+              <p className={`text-[10px] uppercase tracking-widest font-bold ${item.highlight ? "text-jli-accent" : "text-jli-muted"}`}>
+                {item.status}
+              </p>
+              {item.highlight && (
+                <div className="mt-4 inline-block px-3 py-1 bg-jli-accent/10 rounded-full">
+                  <span className="text-[8px] text-jli-accent font-bold uppercase tracking-widest">Recommended</span>
                 </div>
-                <div className="flex justify-between items-center border-b border-black/5 pb-4">
-                  <span className="text-xs text-jli-muted">05 April 2026</span>
-                  <span className="text-[8px] text-emerald-600 font-bold uppercase tracking-widest">Open</span>
-                </div>
-                <div className="flex justify-between items-center">
-                  <span className="text-xs text-jli-muted">12 April 2026</span>
-                  <span className="text-[8px] text-amber-600 font-bold uppercase tracking-widest">Limited</span>
-                </div>
-              </div>
+              )}
             </motion.div>
-          </motion.div>
-        </div>
+          ))}
+        </motion.div>
+
+        <Reveal delay={0.4}>
+          <div className="text-center space-y-6">
+            <Magnetic>
+              <a href="#" className="glow-button inline-flex items-center bg-jli-gradient text-white px-16 py-8 rounded-sm font-bold text-[12px] uppercase tracking-[0.4em] hover:brightness-110 shadow-2xl transition-all w-full md:w-auto justify-center">
+                Apply for the JiSRA Young Scholars Test
+              </a>
+            </Magnetic>
+            <p className="text-[9px] text-jli-muted uppercase tracking-[0.3em] font-bold">
+              Earlier assessment dates have more available seats.
+            </p>
+          </div>
+        </Reveal>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const Fellowship = () => {
+const Fellowship = ({ onInView }: { onInView: (color: string) => void }) => {
   return (
-    <section className="py-40 bg-jli-bg relative overflow-hidden">
+    <Section bgColor="#ffffff" onInView={onInView}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12 text-center">
         <Reveal>
           <div className="space-y-12">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">The Journey Begins</span>
-            <h2 className="text-5xl md:text-8xl font-display font-bold text-jli-text leading-tight">
+            <h2 className="text-4xl sm:text-5xl md:text-8xl font-display font-bold text-jli-text leading-tight">
               Become a JiSRA <br /> <span className="text-gradient italic">Young Fellow</span>
             </h2>
             <p className="text-jli-muted text-xl max-w-2xl mx-auto font-light leading-relaxed">
@@ -902,7 +914,7 @@ const Fellowship = () => {
               className="pt-12"
             >
               <Magnetic>
-                <a href="#jyst" className="glow-button bg-jli-accent text-white px-16 py-8 rounded-sm font-bold text-[12px] uppercase tracking-[0.4em] hover:bg-emerald-700 shadow-2xl transition-all">
+                <a href="#jyst" className="glow-button bg-jli-gradient text-white px-16 py-8 rounded-sm font-bold text-[12px] uppercase tracking-[0.4em] hover:brightness-110 shadow-2xl transition-all">
                   Apply for the JYST 2026
                 </a>
               </Magnetic>
@@ -910,11 +922,11 @@ const Fellowship = () => {
           </div>
         </Reveal>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const Faculty = () => {
+const Faculty = ({ onInView }: { onInView: (color: string) => void }) => {
   const faculty = [
     { name: "Dr. Ahmed Mansour", role: "Dean of Islamic Sciences", bio: "Former Professor at Al-Azhar, specialist in Fiqh and Ethics." },
     { name: "Prof. Sarah Khalid", role: "Director of Modern Frontiers", bio: "AI Researcher with a focus on ethical computational models." },
@@ -922,10 +934,10 @@ const Faculty = () => {
   ];
 
   return (
-    <section id="faculty" className="py-40 bg-jli-bg relative">
+    <Section id="faculty" bgColor="#fffbeb" onInView={onInView}>
       <div className="max-w-7xl mx-auto px-6 lg:px-12">
         <Reveal>
-          <div className="text-center mb-32 space-y-6">
+          <div className="text-center mb-16 md:mb-32 space-y-6">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">Academic Leadership</span>
             <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">The <span className="text-gradient italic">Mentors</span></h2>
           </div>
@@ -942,7 +954,7 @@ const Faculty = () => {
             <TiltCard key={idx}>
               <motion.div 
                 variants={scaleIn}
-                className="glass p-10 rounded-sm border-black/5 hover:border-jli-accent transition-all duration-500 text-center group h-full"
+                className="glass p-10 rounded-sm border-black/5 hover:border-jli-accent transition-all duration-500 text-center group h-full bg-jli-secondary/30"
               >
                 <div className="w-24 h-24 rounded-full bg-jli-secondary mx-auto mb-8 flex items-center justify-center text-jli-accent group-hover:scale-110 group-hover:bg-jli-accent group-hover:text-white transition-all duration-500">
                   <Users size={40} />
@@ -955,11 +967,11 @@ const Faculty = () => {
           ))}
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 
-const FAQ = () => {
+const FAQ = ({ onInView }: { onInView: (color: string) => void }) => {
   const faqs = [
     { q: "What is the age requirement for classes 5 and 6?", a: "Students applying for Class 5 should typically be 10-11 years old, and Class 6 should be 11-12 years old." },
     { q: "Is the program fully residential?", a: "Yes, JLI is a fully residential institute designed to provide a 24/7 immersive learning and Tarbiyah environment." },
@@ -968,10 +980,10 @@ const FAQ = () => {
   ];
 
   return (
-    <section id="faq" className="py-40 bg-jli-card relative">
+    <Section id="faq" bgColor="#ffffff" onInView={onInView}>
       <div className="max-w-4xl mx-auto px-6">
         <Reveal>
-          <div className="text-center mb-24 space-y-6">
+          <div className="text-center mb-12 md:mb-24 space-y-6">
             <span className="text-jli-accent text-[10px] uppercase tracking-[0.5em] font-bold">Inquiry</span>
             <h2 className="text-4xl md:text-6xl font-display font-bold text-jli-text">Common <span className="text-gradient italic">Questions</span></h2>
           </div>
@@ -988,7 +1000,7 @@ const FAQ = () => {
             <motion.div 
               key={idx}
               variants={fadeInUp}
-              className="glass p-8 rounded-sm border-black/5 hover:border-jli-accent/30 transition-all duration-500"
+              className="glass p-8 rounded-sm border-black/5 hover:border-jli-accent/30 transition-all duration-500 bg-jli-secondary/20"
             >
               <h3 className="text-xl font-display font-bold text-jli-text mb-4">{faq.q}</h3>
               <p className="text-jli-muted text-sm leading-relaxed font-light">{faq.a}</p>
@@ -996,7 +1008,7 @@ const FAQ = () => {
           ))}
         </motion.div>
       </div>
-    </section>
+    </Section>
   );
 };
 
@@ -1090,28 +1102,35 @@ const Footer = () => {
 // --- Main App ---
 
 export default function App() {
+  const [bgColor, setBgColor] = useState('#ffffff');
+
   return (
-    <div className="min-h-screen flex flex-col bg-white selection:bg-jli-accent/20 overflow-x-hidden">
+    <div className="min-h-screen flex flex-col selection:bg-jli-accent/20 overflow-x-hidden relative">
+      <motion.div 
+        className="fixed inset-0 z-[-1]"
+        animate={{ backgroundColor: bgColor }}
+        transition={{ duration: 1.5, ease: "easeInOut" }}
+      />
       <div className="noise" />
       <ProgressBar />
       <Navbar />
       <main className="flex-grow">
-        <Hero />
+        <Hero onInView={setBgColor} />
         {/* Vision Section */}
-        <Mission />
-        <Pedagogy />
-        <AgentsOfVision />
+        <Mission onInView={setBgColor} />
+        <Pedagogy onInView={setBgColor} />
+        <AgentsOfVision onInView={setBgColor} />
         
         {/* Curriculum Section */}
-        <TheJiSRAWay />
-        <Curriculum />
+        <TheJiSRAWay onInView={setBgColor} />
+        <Curriculum onInView={setBgColor} />
         
         {/* JYST Section */}
-        <Admissions />
-        <Fellowship />
+        <Admissions onInView={setBgColor} />
+        <Fellowship onInView={setBgColor} />
         
-        <Faculty />
-        <FAQ />
+        <Faculty onInView={setBgColor} />
+        <FAQ onInView={setBgColor} />
       </main>
       <Footer />
     </div>
