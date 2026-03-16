@@ -348,13 +348,7 @@ const Hero = ({ onInView }: { onInView: (color: string) => void }) => {
         >
           {/* Header Stack */}
           <div className="flex flex-col items-center space-y-6 mb-8">
-            <motion.div variants={fadeInUp} className="flex flex-col items-center space-y-4">
-              <img src="/logo.png" alt="JiSRA Logo" className="h-16 md:h-20 w-auto" referrerPolicy="no-referrer" />
-              <div className="flex flex-col items-center">
-                <span className="text-jli-text font-serif font-bold text-2xl md:text-3xl tracking-tight leading-none">JiSRA</span>
-                <span className="text-jli-muted text-[10px] md:text-[12px] uppercase tracking-[0.4em] font-bold">Leadership Institute</span>
-              </div>
-            </motion.div>
+            
 
             <motion.div 
               variants={fadeInUp}
