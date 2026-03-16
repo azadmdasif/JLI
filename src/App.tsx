@@ -322,7 +322,7 @@ const Hero = ({ onInView }: { onInView: (color: string) => void }) => {
     <motion.section 
       ref={containerRef} 
       onViewportEnter={() => onInView("#ffffff")}
-      className="relative min-h-screen flex items-center justify-center overflow-hidden py-32 md:py-0"
+      className="relative min-h-screen flex items-start justify-center overflow-hidden pt-28 md:pt-36 pb-16"
     >
       <LensFlare />
       {/* Background Image with Parallax */}
@@ -347,7 +347,7 @@ const Hero = ({ onInView }: { onInView: (color: string) => void }) => {
           className="space-y-8 md:space-y-12"
         >
           {/* Header Stack */}
-          <div className="flex flex-col items-center space-y-6 mb-8">
+          <div className="flex flex-col items-center space-y-4 mb-4">
             
 
             <motion.div 
