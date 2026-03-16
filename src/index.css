@@ -1,0 +1,104 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap');
+
+@theme {
+  --font-sans: "Inter", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", serif;
+  --font-display: "Playfair Display", serif;
+  
+  --color-jli-bg: #fdfbf7;
+  --color-jli-card: #f5f2ed;
+  --color-jli-accent: #1a3a32;
+  --color-jli-secondary: #e5e1da;
+  --color-jli-text: #1a1a1a;
+  --color-jli-muted: #6b6b6b;
+
+  --animate-gradient: gradient 8s ease infinite;
+
+  @keyframes gradient {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+}
+
+@layer base {
+  body {
+    @apply font-sans text-jli-text bg-jli-bg antialiased selection:bg-jli-accent/20;
+    scroll-behavior: smooth;
+  }
+  
+  h1, h2, h3, h4, h5, h6 {
+    @apply font-serif tracking-tight;
+  }
+
+  /* Hide cursor on mobile */
+  @media (max-width: 1024px) {
+    body {
+      cursor: auto;
+    }
+  }
+}
+
+@layer utilities {
+  .glass {
+    @apply bg-black/5 backdrop-blur-xl border border-black/10;
+  }
+  
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-black via-neutral-500 to-black;
+  }
+
+  .glow-button {
+    @apply relative overflow-hidden transition-all duration-700;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
+  }
+
+  .glow-button:hover {
+    box-shadow: 0 0 40px rgba(0, 0, 0, 0.1);
+  }
+
+  .islamic-border {
+    position: relative;
+  }
+
+  .islamic-border::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    width: 100%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--color-jli-accent), transparent);
+  }
+
+  .noise {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    z-index: 9999;
+    opacity: 0.03;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+  }
+
+  .parallax-bg {
+    will-change: transform;
+  }
+
+  .mask-radial {
+    mask-image: radial-gradient(circle at center, black, transparent 80%);
+  }
+
+  .text-gradient {
+    @apply bg-clip-text text-transparent bg-gradient-to-r from-jli-accent via-emerald-900 to-jli-accent bg-[length:200%_auto] animate-gradient;
+  }
+}
+
+/* Custom Islamic Pattern Background - Geometric Star (Girih inspired) */
+.islamic-pattern {
+  background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M50 0l11.226 34.549h36.327L68.127 55.902l11.226 34.549L50 69.098 20.647 90.451l11.226-34.549L2.447 34.549h36.327z' fill='%23000000' fill-opacity='0.02' fill-rule='evenodd'/%3E%3C/svg%3E");
+}
+
